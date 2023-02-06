@@ -7,42 +7,36 @@ import java.util.List;
 
 @Service
 public class MovieService {
+
     @Autowired
     MovieRepository movieRepository;
 
-    public void addMovie(Movie movie){
-        movieRepository.saveMovie(movie);
+    public String addMovie(Movie movie){
+        return movieRepository.addMovie(movie);
     }
 
-    public void addDirector(Director director){
-        movieRepository.saveDirector(director);
+    public String addDirector(Director director){
+        return movieRepository.addDirector(director);
     }
-
-    public void createMovieDirectorPair(String movie, String director){
-        movieRepository.saveMovieDirectorPair(movie, director);
+    public String addMovieDirectorPair(String director,String movie){
+        return movieRepository.addpair(director,movie);
     }
-
-    public Movie findMovie(String movieName){
-        return movieRepository.findMovie(movieName);
+    public Movie getMovieByName(String name){
+        return movieRepository.getmovie(name);
     }
-
-    public Director findDirector(String directorName){
-        return movieRepository.findDirector(directorName);
+    public Director getDirectorByName(String name){
+        return movieRepository.getdirecor(name);
     }
-
-    public List<String> findMoviesFromDirector(String director){
-        return movieRepository.findMoviesFromDirector(director);
+    public List<String> getMoviesByDirectorName(String director) {
+        return movieRepository.getMoviesByDirectorName(director);
     }
-
     public List<String> findAllMovies(){
-        return movieRepository.findAllMovies();
+        return movieRepository.getAllMovies();
     }
-
-    public void deleteDirector(String director){
-        movieRepository.deleteDirector(director);
+    public String deleteDirectorByName(String director){
+        return movieRepository.deleteDirectorByName(director);
     }
-
-    public void deleteAllDirectors(){
-        movieRepository.deleteAllDirector();
+    public String deleteAllDirectors(){
+        return movieRepository.deleteAllDirectors();
     }
 }
