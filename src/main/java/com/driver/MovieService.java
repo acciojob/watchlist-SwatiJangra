@@ -3,7 +3,7 @@ package com.driver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.util.*;
 
 @Service
 public class MovieService {
@@ -18,24 +18,31 @@ public class MovieService {
     public String addDirector(Director director){
         return movieRepository.addDirector(director);
     }
-    public String addMovieDirectorPair(String director,String movie){
-        return movieRepository.addpair(director,movie);
+
+    public String addMovieDirectorPair(String movieName, String directorName){
+        return movieRepository.addMovieDirectorPair(movieName,directorName);
     }
+
     public Movie getMovieByName(String name){
-        return movieRepository.getmovie(name);
+        return movieRepository.getMovieByName(name);
     }
+
     public Director getDirectorByName(String name){
-        return movieRepository.getdirecor(name);
+        return movieRepository.getDirectorByName(name);
     }
-    public List<String> getMoviesByDirectorName(String director) {
-        return movieRepository.getMoviesByDirectorName(director);
+
+    public List<String> getMoviesByDirectorName(String name){
+        return movieRepository.getMoviesByDirectorName(name);
     }
+
     public List<String> findAllMovies(){
-        return movieRepository.getAllMovies();
+        return movieRepository.findAllMovies();
     }
-    public String deleteDirectorByName(String director){
-        return movieRepository.deleteDirectorByName(director);
+
+    public String deleteDirectorByName(String name){
+        return movieRepository.deleteDirectorByName(name);
     }
+
     public String deleteAllDirectors(){
         return movieRepository.deleteAllDirectors();
     }

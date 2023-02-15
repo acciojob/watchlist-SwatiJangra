@@ -1,91 +1,131 @@
 package com.driver;
 
+import java.util.*;
 import org.springframework.stereotype.Repository;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-
-import java.util.List;
 
 @Repository
 public class MovieRepository {
 
-    HashMap<String,Movie> movies=new HashMap<>();
-    HashMap<String,Director> directors=new HashMap<>();
-    HashMap<String,List<String>> pair=new HashMap<>();
+    public ArrayList<Movie> mv = new ArrayList<>();
+    public ArrayList<Director> dr = new ArrayList<>();
+    public Map<Director,ArrayList<Movie>> mp = new HashMap<>();
 
     public String addMovie(Movie movie){
-        String mv=movie.getName();
-        movies.put(mv,movie);
-        return "Successfully Added Movie";
-    }
-    public String addDirector(Director director){
-        directors.put(director.getName(),director);
-        return "Successfully Added Director";
-    }
-
-    public Movie getmovie(String name){
-        return movies.get(name);
-    }
-    public Director getdirecor(String name){
-        return directors.get(name);
-    }
-
-    public String addpair(String mvName,String dirName){
-        if(movies.containsKey(mvName) && directors.containsKey(dirName)){
-            if(pair.containsKey(dirName))
-                pair.get(dirName).add(mvName);
-            else {
-                ArrayList<String> mv=new ArrayList<>();
-                mv.add(mvName);
-                pair.put(dirName,mv);
+        for(int i=0;i<mv.size();i++){
+            Movie m = mv.get(i);
+            if(m.getName().equals(movie.getName()) && m.getDurationInMinutes() == movie.getDurationInMinutes() && m.getImdbRating() == movie.getImdbRating()){
+                return "Movie already added.";
             }
         }
-        return "SUCCESSFULLY PAIRED";
+        mv.add(movie);
+        return "Movie successfully added.";
     }
 
-    public List getAllMovies(){
-        ArrayList<String> mvs=new ArrayList<>();
-        for(String s:movies.keySet())
-            mvs.add(s);
-
-        return mvs;
-    }
-
-    public String deleteDirectorByName(String dirName){
-        if(directors.containsKey(dirName))
-        {
-            if(pair.containsKey(dirName))
-            {
-                List<String> movies1=pair.get(dirName);
-                for(String mv:movies1){
-                    movies.remove(mv);
-                }
-                pair.remove(dirName);
+    public String addDirector(Director director){
+        for(int i=0;i<dr.size();i++){
+            Director d = dr.get(i);
+            if(d.getName().equals(director.getName())){
+                return "Director already added.";
             }
-            directors.remove(dirName);
-            return "SUCCESSFULLY DELETED ";
+        }
+        dr.add(director);
+        return "Director successfully added.";
+    }
+
+    public String addMovieDirectorPair(String movieName, String directorName){
+        Movie m = null;
+        Director d = null;
+        for(int i=0;i<mv.size();i++){
+            if(mv.get(i).getName().equals(movieName)){
+                m = mv.get(i);
+            }
+        }
+        for(int i=0;i<dr.size();i++){
+            if(dr.get(i).getName().equals(directorName)){
+                d = dr.get(i);
+            }
+        }
+
+        if(!mp.containsKey(d)){
+            ArrayList<Movie> ar = new ArrayList<>();
+            ar.add(m);
+            mp.put(d,ar);
+            return "Pair added successfully";
+        }
+        ArrayList<Movie> movie = mp.get(d);
+        movie.add(m);
+        mp.put(d,movie);
+        return "Pair added successfully.";
+    }
+
+    public Movie getMovieByName(String name){
+        for(int i=0;i<mv.size();i++){
+            if(mv.get(i).getName().equals(name)){
+                return mv.get(i);
+            }
         }
         return null;
     }
 
-    public String deleteAllDirectors(){
-        ArrayList<String> list=new ArrayList<>();
-        for(String s:pair.keySet())
-        {
-            for(String m:pair.get(s))
-                list.add(m);
+    public Director getDirectorByName(String name){
+        for(int i=0;i<dr.size();i++){
+            if(dr.get(i).getName().equals(name)){
+                return dr.get(i);
+            }
         }
-        for(String i:list)
-            movies.remove(i);
-
-        return  "SUCCESSFULLY DELETED ALL DIRECTORS";
+        return null;
     }
-    public List getMoviesByDirectorName(String dirName){
-        List<String> movieNames=new ArrayList<>();
-        if(pair.containsKey(dirName))
-            movieNames=(pair.get(dirName));
 
-        return movieNames;
+    public List<String> getMoviesByDirectorName(String name){
+        Director d = null;
+        for(int i=0;i<dr.size();i++){
+            if(dr.get(i).getName().equals(name)){
+                d = dr.get(i);
+                break;
+            }
+        }
+        ArrayList<Movie> am= mp.get(d);
+        List<String> ar = new ArrayList<>();
+        for(int i=0;i<am.size();i++){
+            ar.add(am.get(i).getName());
+        }
+        return ar;
+    }
+
+    public List<String> findAllMovies(){
+        List<String> ar = new ArrayList<>();
+        for(int i=0;i<mv.size();i++){
+            ar.add(mv.get(i).getName());
+        }
+        return ar;
+    }
+
+    public String deleteDirectorByName(String name){
+        Director d = null;
+        for(int i=0;i<dr.size();i++){
+            if(dr.get(i).getName().equals(name)){
+                d = dr.get(i);
+                break;
+            }
+        }
+        ArrayList<Movie> ar = mp.get(d);
+        mp.remove(d);
+        dr.remove(d);
+        for(int i=0;i<ar.size();i++){
+            mv.remove(ar.get(i));
+        }
+        return "Director movies removed successfully.";
+    }
+
+    public String deleteAllDirectors(){
+        for(int i=0;i<dr.size();i++){
+            ArrayList<Movie> ar = mp.get(dr.get(i));
+            for(int j=0;j<ar.size();j++){
+                mv.remove(ar.get(j));
+            }
+        }
+        mp.clear();
+        dr.clear();
+        return "All the directors and movies removed successfully.";
     }
 }
