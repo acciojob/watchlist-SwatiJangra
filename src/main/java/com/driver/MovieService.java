@@ -1,9 +1,9 @@
 package com.driver;
 
+import java.util.*;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.*;
 
 @Service
 public class MovieService {
@@ -11,39 +11,39 @@ public class MovieService {
     @Autowired
     MovieRepository movieRepository;
 
-    public String addMovie(Movie movie){
-        return movieRepository.addMovie(movie);
+    public void addMovie(Movie movie){
+        movieRepository.saveMovie(movie);
     }
 
-    public String addDirector(Director director){
-        return movieRepository.addDirector(director);
+    public void addDirector(Director director){
+        movieRepository.saveDirector(director);
     }
 
-    public String addMovieDirectorPair(String movieName, String directorName){
-        return movieRepository.addMovieDirectorPair(movieName,directorName);
+    public void createMovieDirectorPair(String movie, String director){
+        movieRepository.saveMovieDirectorPair(movie, director);
     }
 
-    public Movie getMovieByName(String name){
-        return movieRepository.getMovieByName(name);
+    public Movie findMovie(String movieName){
+        return movieRepository.findMovie(movieName);
     }
 
-    public Director getDirectorByName(String name){
-        return movieRepository.getDirectorByName(name);
+    public Director findDirector(String directorName){
+        return movieRepository.findDirector(directorName);
     }
 
-    public List<String> getMoviesByDirectorName(String name){
-        return movieRepository.getMoviesByDirectorName(name);
+    public List<String> findMoviesFromDirector(String director){
+        return movieRepository.findMoviesFromDirector(director);
     }
 
     public List<String> findAllMovies(){
         return movieRepository.findAllMovies();
     }
 
-    public String deleteDirectorByName(String name){
-        return movieRepository.deleteDirectorByName(name);
+    public void deleteDirector(String director){
+        movieRepository.deleteDirector(director);
     }
 
-    public String deleteAllDirectors(){
-        return movieRepository.deleteAllDirectors();
+    public void deleteAllDirectors(){
+        movieRepository.deleteAllDirector();
     }
 }
